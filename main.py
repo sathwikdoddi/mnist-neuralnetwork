@@ -1,5 +1,6 @@
 from mnist_database import get_mnist
 import numpy as np
+import matplotlib.pyplot as plt
 
 images, labels = get_mnist()
 w_i_h = np.random.uniform(-0.5, 0.5, (20, 784))
@@ -34,3 +35,22 @@ for iteration in range(iterations):
     
     print(f"Accuracy: {round((num_correct / images.shape[0]) * 100, 2)}%")
     num_correct = 0
+
+while True:
+    sample = int(input("Enter a number from 0 to 59999 (-1 to quit): "))
+    if sample == -1:
+        break
+        
+    image = images[sample]
+    plt.imshow(image.reshape(28,28), cmap="Greys")
+
+    image.shape += (1,)
+
+    h_raw = b_i_h + w_i_h @ image
+    h_activated = 1 / (1 + np.exp(-h_raw))
+
+    o_raw = b_h_o + w_h_o @ h_activated
+    o_activated = 1 / (1 + np.exp(-o_raw))
+
+    plt.title(f"Number Detected: {o_activated.argmax()}")
+    plt.show()
